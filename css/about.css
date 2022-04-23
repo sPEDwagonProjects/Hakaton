@@ -1,4 +1,4 @@
-@media (min-width: 1120px) {
+@media (min-width: 320px) {
     .up {
         background-size: 100%;
         height: 150px;
@@ -16,8 +16,8 @@
     }
 
     .lk {
-        height: 70px;
-        width: 70px;
+        height: 60px;
+        width: 59px;
         float: right;
         object-fit: cover;
         font-size: 16px;
