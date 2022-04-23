@@ -24,6 +24,13 @@
         border: none;
     }
 
+    .info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+    }
+
     .menu {
         display: flex;
         justify-content: space-between;
@@ -72,7 +79,6 @@
         border-radius: 30px;
         width: 480px;
         height: 300px;
-        margin: 0px 50px 50px 30px;
     }
 
     .text_in {
