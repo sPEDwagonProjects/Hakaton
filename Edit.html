@@ -11,56 +11,50 @@
 <script>
 
 var urlParams = new URLSearchParams(window.location.search);
-
-   
-$(document).ready(  function(){ 
-    sessionStorage["editID"]= urlParams.get("id").replace("/","")
-});
-       
-    
+    console.log(sessionStorage['editID'].value);
+  
     var res = $.ajax({
                          type: "Get",
                          dataType: "json",
-                         url: 'https://u1662365.plsk.regruhosting.ru/books.getbookById?token='+sessionStorage['AuthToken']+'&id='+urlParams.get("id").replace("/","")+'&'+'fullinfo=true',
+                         url: 'https://u1662365.plsk.regruhosting.ru/books.getbookById?token='+sessionStorage['AuthToken']+'&id='+sessionStorage['editID']+'&'+'fullinfo=true',
                          success: function(data){
                                 console.log(data);
-
+                                sessionStorage['eid']=sessionStorage['editID'];
+                                sessionStorage['idtitle']=data['title'];
+                                sessionStorage['author']=data['author']['title'];
+                                sessionStorage['publisher']=data['publisher']['title'];
                             const item = `
     <div class="select">Наименование</div>
             <div class="second_text">
-                <span style="font-family: Trebuchet MS;">${data['title']}</span>
+                <input style="font-family: Trebuchet MS;" value=${data['title']}></input>
             </div>
             <div class="select">Автор</div>
             <div class="second_text">
-                <span style="font-family: Trebuchet MS;">${data['author']['title']}</span>
+                <input style="font-family: Trebuchet MS;" value=${data['author']['title']}></input>
             </div>
             <div class="select">Редакция</div>
             <div class="second_text">
-                <span style="font-family: Trebuchet MS;">${data['publisher']['title']} </span>
+                <input style="font-family: Trebuchet MS;" value=${data['publisher']['title']}> </input>
             </div>
-            <div class="select">Наличие</div>
-            <div class="second_text">
-                <span style="font-family: Trebuchet MS;">${data['taken']}</span>
-            </div>
-           
-            <button class="about" onclick="return ToFovarite(${data['id']});" style="float: left; margin-top: 25px;"><a href="# ">В избранное</a></button>
-            <button class="about" onclick="return ToBooking(${data['id']});" style="float: right; margin-top: 25px;"><a href="#">Забронировать</a></button>
+
+            <button class="about" onclick="return Edit();" style="float: right; margin-top: 25px;"><a href="#">Отредактировать</a></button>
       `;
     $('.book_info').append(item);
     }});
 
-    function ToFovarite(id){
-        console.log(id);
+    function Edit()
+    {
+       
         $.ajax({
        
        type: "Get",
        dataType: "json",
-       url:"https://u1662365.plsk.regruhosting.ru/Favorites.add?userLogin="+sessionStorage['UserName']+"&bookId="+id+"&token="+sessionStorage['AuthToken'],
+       url:"https://u1662365.plsk.regruhosting.ru/books.Edit?id="+sessionStorage['eid']+"&title="+sessionStorage['idtitle']+"&author="+sessionStorage['author']+"&publisher="+sessionStorage['publisher']+"&token="+sessionStorage['AuthToken'],
   
        success:function(data)
        {
-           console.log("ok");
-           window.location.replace("about.html?id="+id);
+         alert("Изменение прошло успещно");
+           
        },error:function(req, status, error){
            if(req.status!=200)
            {
@@ -72,27 +66,6 @@ $(document).ready(  function(){
         });
     
     
-    }
-    function ToBooking(id){
-        
-        console.log("https://u1662365.plsk.regruhosting.ru/Booking.add?userLogin="+sessionStorage['UserName']+"&bookId="+id+"&token="+sessionStorage['AuthToken']);
-        $.ajax({
-       
-       type: "Get",
-       dataType: "json",
-       url: "https://u1662365.plsk.regruhosting.ru/Booking.add?userLogin="+sessionStorage['UserName']+"&bookId="+id+"&token="+sessionStorage['AuthToken'],
-  
-       success:function(data)
-       {
-           window.location.replace("about.html?id="+id);
-       },error:function(req, status, error){
-           if(req.status!=200){
-            console.log(req.status);
-            console.log(error);
-            alert("Произошла проблема при добавлении записи")
-           }
-       }
-        });
     }
 
 </script>
@@ -106,10 +79,7 @@ $(document).ready(  function(){
         <form action="lk_in.html">
             <button class="lk" style="background: url(img/lk.png); background-size: contain;"></button>
         </form>
-        <form action="Edit.html">
-            
-            <button class="lk" type="submit" style="background: url(img/pen.png); background-size: contain; margin-right: 20px;"></button>
-        </form>
+       
     </div>
     <div class="info">
         <div class="book" style="float: left; text-align: center; height: 250px; width: 250px;">
