@@ -60,7 +60,9 @@ function GetData()
             {
                 window.location.replace("buy.html");
             },error:function(req, status, error){
+                if(req.status!=200){
                 alert("Произошла проблема при удалении записи")
+                }
             }
         });
     }

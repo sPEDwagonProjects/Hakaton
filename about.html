@@ -12,10 +12,11 @@
 
 var urlParams = new URLSearchParams(window.location.search);
 
+
     var res = $.ajax({
                          type: "Get",
                          dataType: "json",
-                         url: 'https://u1662365.plsk.regruhosting.ru/books.getbookById?token='+sessionStorage['AuthToken']+'&id='+urlParams.get("id")+'&'+'fullinfo=true',
+                         url: 'https://u1662365.plsk.regruhosting.ru/books.getbookById?token='+sessionStorage['AuthToken']+'&id='+urlParams.get("id").replace("/","")+'&'+'fullinfo=true',
                          success: function(data){
                                 console.log(data);
 

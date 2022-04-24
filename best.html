@@ -58,7 +58,9 @@ function GetData()
             {
                 window.location.replace("best.html");
             },error:function(req, status, error){
+                if(error.status!=200){
                 alert("Произошла проблема при удалении записи")
+                }
             }
         });
     }
