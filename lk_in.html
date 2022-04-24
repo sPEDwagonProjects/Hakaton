@@ -9,7 +9,11 @@
     <link rel="stylesheet" href="css/about.css">
 </head>
 <script>
-    $('.username').append("<p>"+sessionStorage["UserName"]+"</p>");
+   var name=sessionStorage["UserName"];
+
+   $('.username').append(name);
+
+    document.getElementById("spanName").innerHTML=sessionStorage["UserName"];
 </script>
 <body bgcolor="#a1ebe4">
     <div class="up" style="background: url(img/up.png);"></div>
@@ -26,7 +30,7 @@
         <div class="book_info" style="float: left;">
             <div class="select">Имя пользователя</div>
             <div class="second_text">
-                <span class="username" style="font-family: Trebuchet MS;"></span>
+                <span id="spanName" class="username" style="font-family: Trebuchet MS;"></span>
             </div>
             <button class="about" style="float: left; margin-top: 25px;"><a href="lk.html">Выход</a></button>
             <button class="about" style="float: right; margin-top: 25px;"><a href="store.html">Каталог</a></button>

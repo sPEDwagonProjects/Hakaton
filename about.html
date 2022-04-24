@@ -54,6 +54,7 @@ var urlParams = new URLSearchParams(window.location.search);
   
        success:function(data)
        {
+           console.log("ok");
            window.location.replace("about.html?id="+id);
        },error:function(req, status, error){
            if(req.status!=200)
