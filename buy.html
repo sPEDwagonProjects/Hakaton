@@ -31,7 +31,7 @@ function GetData()
                         <div class="second_text" style="float: left;">
                         <span style="font-family: Trebuchet MS;">${data2['title']}</span>
                         </div>
-                        <button class="about" onclick="return Delete(${element['id']});"  style="float: right; margin-top: 10px; margin-bottom: 10px; background-color:brown">Удалить</button>
+                        <button class="about" onclick="return Delete(${element['id']});"  style="float: right; margin-top: 10px; margin-bottom: 10px; background-color:brown"><a>Удалить</a></button>
                         `; $(".book_info").append(Item);}
                     })
                 })},error:function(req, status, error){
@@ -50,6 +50,7 @@ function GetData()
    
     function Delete(id)
     {
+        
         $.ajax({
        
             type: "Get",
@@ -58,8 +59,10 @@ function GetData()
        
             success:function(data)
             {
+                console.log("log");
                 window.location.replace("buy.html");
             },error:function(req, status, error){
+                console.log(req);
                 if(req.status!=200){
                 alert("Произошла проблема при удалении записи")
                 }

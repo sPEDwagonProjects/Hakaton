@@ -29,8 +29,16 @@
                 },
               
                 error:function(req, status, error){
-                
-                    alert("Произошла ошибка при регистрации:"+req.status);
+                    if(req.status!=200){
+                        alert("Произошла ошибка при регистрации:"+req.status);
+                    }
+                    else if(req.status==400){
+                        alert("Пользователь с таким именем уже зарегестрирован")
+                    }
+                    else{
+                        alert("Регистрация успешна");
+                        Authorize();
+                    }
                 }
         });
        

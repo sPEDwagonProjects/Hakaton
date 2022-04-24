@@ -45,27 +45,25 @@ var urlParams = new URLSearchParams(window.location.search);
     }});
 
     function ToFovarite(id){
+        console.log(id);
         $.ajax({
        
        type: "Get",
        dataType: "json",
-       url: "https://u1662365.plsk.regruhosting.ru/Favorites.add?userLogin="+sessionStorage['UserName']+"&bookId="+id+"&token="+sessionStorage['AuthToken'],
+       url:"https://u1662365.plsk.regruhosting.ru/Favorites.add?userLogin="+sessionStorage['UserName']+"&bookId="+id+"&token="+sessionStorage['AuthToken'],
   
        success:function(data)
        {
-           window.location.replace("about.html");
-       },error:function(req, status, error){
 
-        if(req.status!=200){
-            console.log(req.status);
-            console.log(error);
-            alert("Произошла проблема при добавлении записи")
-           }
-          
+        console.log("ok");
+        console.log(data);
+           window.location.replace("about.html");
        }
-        });
+    })
+    
     }
     function ToBooking(id){
+        
         console.log("https://u1662365.plsk.regruhosting.ru/Booking.add?userLogin="+sessionStorage['UserName']+"&bookId="+id+"&token="+sessionStorage['AuthToken']);
         $.ajax({
        
