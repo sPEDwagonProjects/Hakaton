@@ -3,11 +3,67 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Авторизация</title>
+    <title>Каталог</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
     <link rel="shortcut icon" href="img/favicon.ico" type="image/png">
     <link rel="stylesheet" href="css/about.css">
 </head>
+<script>
+    function Register()
+    {
+       var login = document.getElementsByName("login_input")[0].value;
+       var pass = document.getElementsByName("password_input")[0].value;
 
+       $.ajax
+       ({
+                type: "Get",
+                dataType: "json",
+                url: "https://u1662365.plsk.regruhosting.ru/Register?username="+login+"&password="+pass,
+                
+                success:function(data)
+                {
+                   alert("Регистрация успешна");
+                   Authorize();
+                   
+                
+                },
+              
+                error:function(req, status, error){
+                
+                    alert("Произошла ошибка при регистрации:"+req.status);
+                }
+        });
+       
+    }
+
+    function Authorize(){
+       var login = document.getElementsByName("login_input")[0].value;
+       var pass = document.getElementsByName("password_input")[0].value;
+       console.log(login);
+
+       $.ajax
+       ({
+                type: "GET",
+                dataType: "json",
+                url: "https://u1662365.plsk.regruhosting.ru/Auth?username="+login+"&password="+pass,
+                
+                success:function(data){
+                   
+
+                    sessionStorage["AuthToken"] =  data["access_token"];
+                    sessionStorage["Role"] =  data["role"];
+                    sessionStorage["UserName"]=data["username"];
+                    window.location.replace("lk_in.html");
+                },
+              
+                error:function(req, status, error){
+                
+                    alert("Произошла ошибка авторизации:"+req.status);
+                }    
+        }); 
+       
+    }
+</script>
 <body bgcolor="#a1ebe4">
     <div class="up" style="background: url(img/up.png);"></div>
     <div>
@@ -23,14 +79,14 @@
         <div class="book_info" style="float: left;">
             <div class="select">Логин</div>
             <div class="second_text">
-                <input type="text" size="30">
+                <input name="login_input" style="font-family: Trebuchet MS;"></input>
             </div>
             <div class="select">Пароль</div>
             <div class="second_text">
-                <input type="text" size="30">
+                <input name="password_input" style="font-family: Trebuchet MS;"></input>
             </div>
-            <button class="about" style="float: left; margin-top: 25px;"><a href="lk_reg.html">Регистрация</a></button>
-            <button class="about" style="float: right; margin-top: 25px;"><a href="lk_in.html">Авторизоваться</a></button>
+            <button class="about" type="button" onclick="Register()" style="float: left; margin-top: 25px;">Регистрация</a></button>
+            <button class="about" type="button" onclick="Authorize()" style="float: right; margin-top: 25px;">Авторизоваться</a></button>
         </div>
     </div>
     <div id="footer">

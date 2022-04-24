@@ -4,9 +4,88 @@
 <head>
     <meta charset="utf-8">
     <title>Подробная информация</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
     <link rel="shortcut icon" href="img/favicon.ico" type="image/png">
     <link rel="stylesheet" href="css/about.css">
 </head>
+<script>
+
+var urlParams = new URLSearchParams(window.location.search);
+
+    var res = $.ajax({
+                         type: "Get",
+                         dataType: "json",
+                         url: 'https://u1662365.plsk.regruhosting.ru/books.getbookById?token='+sessionStorage['AuthToken']+'&id='+urlParams.get("id")+'&'+'fullinfo=true',
+                         success: function(data){
+                                console.log(data);
+
+                            const item = `
+    <div class="select">Наименование</div>
+            <div class="second_text">
+                <span style="font-family: Trebuchet MS;">${data['title']}</span>
+            </div>
+            <div class="select">Автор</div>
+            <div class="second_text">
+                <span style="font-family: Trebuchet MS;">${data['author']['title']}</span>
+            </div>
+            <div class="select">Редакция</div>
+            <div class="second_text">
+                <span style="font-family: Trebuchet MS;">${data['publisher']['title']} </span>
+            </div>
+            <div class="select">Наличие</div>
+            <div class="second_text">
+                <span style="font-family: Trebuchet MS;">${data['taken']}</span>
+            </div>
+           
+            <button class="about" onclick="return ToFovarite(${data['id']});" style="float: left; margin-top: 25px;"><a href="# ">В избранное</a></button>
+            <button class="about" onclick="return ToBooking(${data['id']});" style="float: right; margin-top: 25px;"><a href="#">Забронировать</a></button>
+      `;
+    $('.book_info').append(item);
+    }});
+
+    function ToFovarite(id){
+        $.ajax({
+       
+       type: "Get",
+       dataType: "json",
+       url: "https://u1662365.plsk.regruhosting.ru/Favorites.add?userLogin="+sessionStorage['UserName']+"&bookId="+id+"&token="+sessionStorage['AuthToken'],
+  
+       success:function(data)
+       {
+           window.location.replace("about.html");
+       },error:function(req, status, error){
+
+        if(req.status!=200){
+            console.log(req.status);
+            console.log(error);
+            alert("Произошла проблема при добавлении записи")
+           }
+          
+       }
+        });
+    }
+    function ToBooking(id){
+        console.log("https://u1662365.plsk.regruhosting.ru/Booking.add?userLogin="+sessionStorage['UserName']+"&bookId="+id+"&token="+sessionStorage['AuthToken']);
+        $.ajax({
+       
+       type: "Get",
+       dataType: "json",
+       url: "https://u1662365.plsk.regruhosting.ru/Booking.add?userLogin="+sessionStorage['UserName']+"&bookId="+id+"&token="+sessionStorage['AuthToken'],
+  
+       success:function(data)
+       {
+           window.location.replace("about.html");
+       },error:function(req, status, error){
+           if(req.status!=200){
+            console.log(req.status);
+            console.log(error);
+            alert("Произошла проблема при добавлении записи")
+           }
+       }
+        });
+    }
+
+</script>
 
 <body bgcolor="#a1ebe4">
     <div class="up" style="background: url(img/up.png);"></div>
@@ -27,24 +106,7 @@
                 style="margin-top: 20px; height: 200px; width: 200px; background-color: white; border-radius: 30px;" />
         </div>
         <div class="book_info" style="float: left;">
-            <div class="select">Наименование</div>
-            <div class="second_text">
-                <span style="font-family: Trebuchet MS;">Тестовое описание книги</span>
-            </div>
-            <div class="select">Автор</div>
-            <div class="second_text">
-                <span style="font-family: Trebuchet MS;">Тестовое описание книги</span>
-            </div>
-            <div class="select">Редакция</div>
-            <div class="second_text">
-                <span style="font-family: Trebuchet MS;">Тестовое описание книги</span>
-            </div>
-            <div class="select">Наличие</div>
-            <div class="second_text">
-                <span style="font-family: Trebuchet MS;">Тестовое описание книги</span>
-            </div>
-            <button class="about" style="float: left; margin-top: 25px;"><a href="#">В избранное</a></button>
-            <button class="about" style="float: right; margin-top: 25px;"><a href="#">Забронировать</a></button>
+           
         </div>
     </div>
     <div id="footer">

@@ -4,25 +4,230 @@
 <head>
     <meta charset="utf-8">
     <title>Каталог</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
     <link rel="shortcut icon" href="img/favicon.ico" type="image/png">
     <link rel="stylesheet" href="css/main.css">
 </head>
 
+<script>
+   
+
+   
+   loadAll();
+   leftPos=true;
+
+
+function CreateCard(data)
+{
+    
+    var position="";
+
+    if(leftPos) {
+        leftPos=false
+        position="left"
+    }
+
+    else{
+        leftPos=true
+         position="right";
+    }
+
+    const Item = `
+            <div class="book" style="float:${position};">
+                <div class="text_in">
+                    <span style="font-family: Arial Black;">${data['type']['title']}</span>
+                </div>
+            <div class="second_text">
+                <span style="font-family: Trebuchet MS;">${data['title']}</span>
+            </div>
+           
+                <form method="get" action="about.html">
+                    <input type="hidden" name="id" value=${data['id']}/>
+                    
+                </form>
+        </div>`;
+        
+    $('.books').append(Item);
+
+    
+    }
+    function SearchCharpter()
+    {
+        var urlParams = new URLSearchParams(window.location.search);
+    var params = {};
+
+    urlParams.forEach((p, key) => {
+        params[key] = p;
+    });
+    
+    
+     
+      $.ajax(
+        {
+            type: "Get",
+            dataType: "json",
+            url: "https://u1662365.plsk.regruhosting.ru/books.searchByCharpter?token="+sessionStorage['AuthToken']+"text="+params['s'],
+            success:function(data) 
+            {
+                console.log(data);
+                data.forEach(element => {
+                    
+                    var res = $.ajax(
+                     {
+                         type: "Get",
+                         dataType: "json",
+                         url: 'https://u1662365.plsk.regruhosting.ru/books.getbookById?token='+sessionStorage['AuthToken']+'&id='+element['id']+'&'+'fullinfo=true',
+                         success: function(data){
+                         
+                             CreateCard(data)
+                         }
+                     });
+                     
+                    
+                     
+                 });
+            },error:function(req, status, error){
+                if(req.status == 401){
+                    alert("Просмотр данного раздела разрешено лишь авторизированным пользователям")
+                    window.location.replace("lk.html");
+                }
+                else{
+                   alert("Произошла ошибка при поиске информации");
+                }
+            }
+                  
+        })
+    };
+
+    function SearchPublisher(){
+        var urlParams = new URLSearchParams(window.location.search);
+    var params = {};
+
+    urlParams.forEach((p, key) => {
+        params[key] = p;
+    });
+    
+      $.ajax(
+        {
+            type: "Get",
+            dataType: "json",
+            url: "https://u1662365.plsk.regruhosting.ru/books.searchByPublisher?token="+sessionStorage['AuthToken']+"&text="+params['s'],
+            success:function(data) 
+            {
+                data.forEach(element => {
+                    
+                    var res = $.ajax(
+                     {
+                         type: "Get",
+                         dataType: "json",
+                         url: 'https://u1662365.plsk.regruhosting.ru/books.getbookById?token='+sessionStorage['AuthToken']+'&id='+element['id']+'&'+'fullinfo=true',
+                         success: function(data){
+                         
+                             CreateCard(data)
+                         }
+                     });
+                     
+                    
+                     
+                 });
+            },error:function(req, status, error){
+                if(req.status == 401){
+                    alert("Просмотр данного раздела разрешено лишь авторизированным пользователям")
+                    window.location.replace("lk.html");
+                }
+                else{
+                   alert("Произошла ошибка при поиске информации");
+                }
+            }
+                  
+        })
+    }
+
+    function loadBooks(){
+        loadRequest(1)
+    }
+    function loadAll(){
+        loadRequest(0);
+    }
+    function loadMagazine(){
+        loadRequest(3);
+    }
+
+    function loadNewPaper(){
+        loadRequest(2);
+    }
+    function loadRequest(categoryId)
+    {
+        if(sessionStorage['AuthToken']!="")
+            var token=sessionStorage['AuthToken'];
+            
+         $('.books').empty();
+        var uri;
+        
+        if(categoryId <=0 ) uri = "https://u1662365.plsk.regruhosting.ru/books.getBooks?token="+token
+        else uri = "https://u1662365.plsk.regruhosting.ru/books.getByType?token="+token+"&id="+categoryId, 
+
+        console.log(uri);
+        $.ajax(
+        {
+            type: "Get",
+            dataType: "json",
+            url: uri,
+            success:function(data) 
+            {
+          
+                data.forEach(element => {
+                    
+                   var res = $.ajax(
+                    {
+                        type: "Get",
+                        dataType: "json",
+                        url: 'https://u1662365.plsk.regruhosting.ru/books.getbookById?token='+token+'&id='+element['id']+'&'+'fullinfo=true',
+                        success: function(data){
+                        
+                            CreateCard(data)
+                        }
+                    });
+                    
+                   
+                    
+                });
+            },error:function(req, status, error){
+                if(req.status == 401){
+                    alert("Просмотр данного раздела разрешено лишь авторизированным пользователям")
+                    window.location.replace("lk.html");
+                }
+                else{
+                    console.log(req);
+                }
+            }
+
+        });
+    
+
+    }
+    
+</script>
+
 <body>
     <div class="up" style="background: url(img/up.png);"></div>
     <div class="menu">
-        <div class="dropdown">
-            <button class="but">
-                Фильтрация
-            </button>
-            <div class="dropdown-content">
-                <a href="#">По изданию</a>
-                <a href="#">По разделам</a>
-            </div>
+        <div class="d1">
+            <form action="" method="get" style="position: relative;">
+                <input name="s" placeholder="Поиск по Разделу" type="search">
+                <button type="submit" onclick="SearchCharpter()">Поиск</button>
+            </form>
         </div>
-        <button class="but" style="float: right;"><a href="#">Книги</a></button>
-        <button class="but" style="float: right;"><a href="#">Журналы</a></button>
-        <button class="but" style="float: right;"><a href="#">Газеты</a></button>
+        <div class="d1">
+            <form action="" method="get" style="position: relative;">
+                <input name="s" placeholder="Поиск по Издателю" type="search">
+                <button type="submit" onclick="SearchPublisher()">Поиск</button>
+            </form>
+        </div>
+        <button class="but" style="float: right;" type="button" onclick="">О нас</button>
+        <button class="but" style="float: right;" type="button" onclick="loadBooks()">Книги</button>
+        <button class="but" style="float: right;" type="button" onclick="loadMagazine()">Журналы</button>
+        <button class="but" style="float: right;" type="button" onclick="loadNewPaper()">Газеты</button>
         <form action="lk_in.html">
             <button class="lk" style="background: url(img/lk.png); background-size: contain;"></button>
         </form>
